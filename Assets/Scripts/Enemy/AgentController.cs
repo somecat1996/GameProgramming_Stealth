@@ -4,6 +4,7 @@ using UnityEngine.Assertions;
 
 public class AgentController : MonoBehaviour
 {
+    [SerializeField] private EnemyController controller;
     [SerializeField] private NavMeshAgent navAgent;
     [SerializeField] private Animator animator;
 
@@ -13,7 +14,7 @@ public class AgentController : MonoBehaviour
 
     private readonly int jogParam = Animator.StringToHash("Jog");
 
-    public void Start()
+    private void Start()
     {
         Assert.IsNotNull(navAgent);
         Assert.IsNotNull(animator);
@@ -21,10 +22,10 @@ public class AgentController : MonoBehaviour
         animator.SetBool(jogParam, true);
     }
 
-    public void Update()
+    private void Update()
     {
         if (!navAgent.hasPath)
-            SetNavAgentDestination();
+            SetNavAgentDestination(controller.GetNewWaypoint());
 
         RotateAgent();
 
@@ -32,10 +33,8 @@ public class AgentController : MonoBehaviour
             navAgent.ResetPath();
     }
 
-    private void SetNavAgentDestination()
+    public void SetNavAgentDestination(Vector3 destination)
     {
-        Vector3 destination = SteeringUtility.Wander(transform, wanderDistance, wanderRadius);
-
         if (NavMesh.SamplePosition(destination, out NavMeshHit hitInfo, wanderDistance + wanderRadius, NavMesh.AllAreas))
         {
             navAgent.destination = hitInfo.position;
