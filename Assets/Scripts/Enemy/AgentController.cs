@@ -2,11 +2,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
 
-public class AgentController : MonoBehaviour
+public class AgentController : EntityMovement
 {
     [SerializeField] private EnemyController controller;
     [SerializeField] private NavMeshAgent navAgent;
-    [SerializeField] private Animator animator;
 
     [SerializeField] private float turnSpeed = 120f;
     [SerializeField] private float wanderDistance = 7f;
@@ -17,9 +16,6 @@ public class AgentController : MonoBehaviour
     private void Start()
     {
         Assert.IsNotNull(navAgent);
-        Assert.IsNotNull(animator);
-
-        animator.SetBool(jogParam, true);
     }
 
     private void Update()
@@ -47,5 +43,17 @@ public class AgentController : MonoBehaviour
         Quaternion desiredRotation = Quaternion.LookRotation(direction);
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, turnSpeed * Time.deltaTime);
+    }
+
+    protected override void EnterObstacle()
+    {
+        base.EnterObstacle();
+        navAgent.speed = GetSpeed();
+    }
+
+    protected override void ExitObstacle()
+    {
+        base.ExitObstacle();
+        navAgent.speed = GetSpeed();
     }
 }

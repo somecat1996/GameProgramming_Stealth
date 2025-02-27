@@ -12,18 +12,15 @@ public enum EnemyState
 
 public class EnemyController : MonoBehaviour
 {
-    // Parent of waypoints
-    public Transform waypointParent;
-
     public AgentController enemy;
 
-    private int waypointIndex;
-    private Transform[] waypoints;
+    private int waypointIndex = 0;
+    // Waypoints
+    public Transform[] waypoints;
     // Start is called before the first frame update
     void Start()
     {
-        waypointIndex = 0;
-        waypoints = waypointParent.GetComponentsInChildren<Transform>();
+
     }
 
     // Update is called once per frame
