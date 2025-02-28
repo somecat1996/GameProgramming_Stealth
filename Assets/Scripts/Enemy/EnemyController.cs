@@ -11,6 +11,7 @@ public enum EnemyState
 public class EnemyController : MonoBehaviour
 {
     public AgentController enemy;
+    public EnemyState enemyState = EnemyState.Patrol;
 
     private int waypointIndex = 0;
     // Waypoints
@@ -27,13 +28,45 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    public Vector3 GetNewWaypoint()
+    public Vector3 GetNewTarget()
     {
-        waypointIndex ++;
+        switch (enemyState)
+        {
+            case EnemyState.Patrol:
+                return NewWaypoint();
+            case EnemyState.Blinky:
+                return PlayerPosition();
+            case EnemyState.Inky:
+                return PredictPlayerPosition();
+            case EnemyState.Pinky:
+                return Encircle();
+            default:
+                return NewWaypoint();
+        }
+    }
+
+    public Vector3 NewWaypoint()
+    {
+        waypointIndex++;
 
         if (waypointIndex >= waypoints.Length) waypointIndex %= waypoints.Length;
 
         return waypoints[waypointIndex].position;
+    }
+
+    public Vector3 PlayerPosition()
+    {
+        return EnemyManager.instance.player.position;
+    }
+
+    public Vector3 PredictPlayerPosition()
+    {
+        return EnemyManager.instance.player.position + EnemyManager.instance.player.right * EnemyManager.instance.lookAheadDistance;
+    }
+
+    public Vector3 Encircle()
+    {
+        return Vector3.zero;
     }
 
     private void OnDrawGizmos()

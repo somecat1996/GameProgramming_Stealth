@@ -20,13 +20,31 @@ public class AgentController : EntityMovement
 
     private void Update()
     {
-        if (!navAgent.hasPath)
-            SetNavAgentDestination(controller.GetNewWaypoint());
-
+        switch (controller.enemyState)
+        {
+            case EnemyState.Patrol:
+                if (!navAgent.hasPath)
+                    SetNavAgentDestination(controller.GetNewTarget());
+                if (Vector3.Distance(transform.position, navAgent.destination) < navAgent.stoppingDistance)
+                    navAgent.ResetPath();
+                break;
+            case EnemyState.Blinky:
+                SetNavAgentDestination(controller.GetNewTarget());
+                break;
+            case EnemyState.Inky:
+                SetNavAgentDestination(controller.GetNewTarget());
+                break;
+            case EnemyState.Pinky:
+                SetNavAgentDestination(controller.GetNewTarget());
+                break;
+            default:
+                if (!navAgent.hasPath)
+                    SetNavAgentDestination(controller.GetNewTarget());
+                if (Vector3.Distance(transform.position, navAgent.destination) < navAgent.stoppingDistance)
+                    navAgent.ResetPath();
+                break;
+        }
         RotateAgent();
-
-        if (Vector3.Distance(transform.position, navAgent.destination) < navAgent.stoppingDistance)
-            navAgent.ResetPath();
     }
 
     public void SetNavAgentDestination(Vector3 destination)

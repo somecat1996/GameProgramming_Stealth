@@ -39,12 +39,15 @@ public class EnemyScaner : MonoBehaviour
             scanDirection = Quaternion.Euler(0, i * scanStep - scanAngle, 0) * transform.forward;
             Gizmos.DrawLine(transform.position + new Vector3(0, .5f, 0), transform.position + scanDirection * scanRange + new Vector3(0, .5f, 0));
         }
-        foreach (var hitInfo in hitInfos)
+        if (hitInfos != null)
         {
-            if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
-                Gizmos.color = Color.red;
-            else Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position + new Vector3(0, .5f, 0), hitInfo.point);
+            foreach (var hitInfo in hitInfos)
+            {
+                if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+                    Gizmos.color = Color.red;
+                else Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position + new Vector3(0, .5f, 0), hitInfo.point);
+            }
         }
     }
 }
