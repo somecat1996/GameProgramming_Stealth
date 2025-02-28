@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -36,6 +34,8 @@ public class PlayerShooter : MonoBehaviour
             GameObject o = Instantiate(obstacle, geo);
             o.transform.position = GetObstaclePosition();
             virtualObstacle.transform.position = defaultPosition;
+
+            UpdateNavMesh.instance.UpdateNavMeshSurface();
         }
     }
 
