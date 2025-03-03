@@ -28,6 +28,11 @@ public class EnemyController : MonoBehaviour
         
     }
 
+    public void SetState(EnemyState state)
+    {
+        enemyState = state;
+    }
+
     public Vector3 GetNewTarget()
     {
         switch (enemyState)

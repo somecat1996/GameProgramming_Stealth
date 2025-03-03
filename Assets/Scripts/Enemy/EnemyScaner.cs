@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemyScaner : MonoBehaviour
 {
+    [SerializeField] private EnemyController controller;
     public float scanRange = 10f;
     public float scanAngle = 50f;
     public int scanStepNum = 20;
@@ -18,6 +19,28 @@ public class EnemyScaner : MonoBehaviour
 
     private void Update()
     {
+        switch (controller.enemyState)
+        {
+            case EnemyState.Patrol:
+                ScanForPlayer();
+                break;
+            case EnemyState.Blinky:
+                LookAtPlayer();
+                break;
+            case EnemyState.Inky:
+                ScanForPlayer();
+                break;
+            case EnemyState.Pinky:
+                ScanForPlayer();
+                break;
+            default:
+                ScanForPlayer();
+                break;
+        }
+    }
+
+    private void ScanForPlayer()
+    {
         Vector3 scanDirection;
         hitInfos.Clear();
         for (int i = 0; i < scanStepNum; i++)
@@ -26,8 +49,17 @@ public class EnemyScaner : MonoBehaviour
             if (Physics.Raycast(transform.position + new Vector3(0, .5f, 0), scanDirection, out RaycastHit hitInfo, scanRange, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Wall")))
             {
                 hitInfos.Add(hitInfo);
+                if (hitInfo.transform.tag == "Player")
+                {
+                    EnemyManager.instance.OnDetectPlayer(controller);
+                }
             }
         }
+    }
+
+    private void LookAtPlayer()
+    {
+
     }
 
     private void OnDrawGizmos()
