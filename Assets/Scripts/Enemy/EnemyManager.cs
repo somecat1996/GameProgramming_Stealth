@@ -14,6 +14,8 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private EnemyController[] enemies;
 
+    public float enemyActivateRange = 10f;
+
     private void Awake()
     {
         instance = this;
@@ -88,16 +90,30 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    public void ActivateOtherEnemy(EnemyController enemy)
+    {
+        foreach (EnemyController enemy1 in enemies)
+        {
+            if (enemy != enemy1 && Vector3.Distance(enemy.enemy.transform.position, enemy1.enemy.transform.position) <= enemyActivateRange)
+            {
+                OnActivate(enemy1);
+            }
+        }
+    }
+
     public void OnActivate(EnemyController enemy)
     {
         EnemyController enemy1;
         if (!GetEnemy(EnemyState.Pinky, out enemy1))
         {
-
+            SetEnemyState(enemy, EnemyState.Pinky);
         }
         else
         {
-
+            if (!GetEnemy(EnemyState.Inky, out enemy1))
+            {
+                SetEnemyState(enemy, EnemyState.Inky);
+            }
         }
     }
 

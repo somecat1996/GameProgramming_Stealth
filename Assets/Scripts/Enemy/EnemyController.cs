@@ -25,7 +25,20 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        switch (enemyState)
+        {
+            case EnemyState.Patrol:
+                break;
+            case EnemyState.Blinky:
+                EnemyManager.instance.ActivateOtherEnemy(this);
+                break;
+            case EnemyState.Inky:
+                break;
+            case EnemyState.Pinky:
+                break;
+            default:
+                break;
+        }
     }
 
     public void SetState(EnemyState state)
