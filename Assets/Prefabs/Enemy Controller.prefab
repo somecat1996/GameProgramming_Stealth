@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 7388693667441461016}
   - component: {fileID: 4410112786873066662}
   m_Layer: 0
-  m_Name: Enemy Agent
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0855183c67fe0b348820c32546d12644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 8466919087559140149}
   scanRange: 10
   scanAngle: 50
   scanStepNum: 40
@@ -418,7 +419,7 @@ GameObject:
   - component: {fileID: 733778906843885088}
   - component: {fileID: 8466919087559140149}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -454,6 +455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 7665623640040509525}
+  enemyState: 0
   waypoints:
   - {fileID: 2473260327882314172}
   - {fileID: 468764511655928715}

@@ -29,7 +29,15 @@ public class AgentController : EntityMovement
                     navAgent.ResetPath();
                 break;
             case EnemyState.Blinky:
-                SetNavAgentDestination(controller.GetNewTarget());
+                if (!EnemyManager.instance.playerLost)
+                    SetNavAgentDestination(controller.GetNewTarget());
+                else
+                {
+                    if (Vector3.Distance(transform.position, navAgent.destination) < navAgent.stoppingDistance)
+                        navAgent.ResetPath();
+                    if (!navAgent.hasPath)
+                        EnemyManager.instance.AlertClear();
+                }
                 break;
             case EnemyState.Inky:
                 SetNavAgentDestination(controller.GetNewTarget());

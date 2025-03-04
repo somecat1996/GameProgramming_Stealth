@@ -25,7 +25,8 @@ public class EnemyScaner : MonoBehaviour
                 ScanForPlayer();
                 break;
             case EnemyState.Blinky:
-                LookAtPlayer();
+                if (EnemyManager.instance.playerLost) ScanForPlayer();
+                else LookAtPlayer();
                 break;
             case EnemyState.Inky:
                 ScanForPlayer();
@@ -59,10 +60,49 @@ public class EnemyScaner : MonoBehaviour
 
     private void LookAtPlayer()
     {
-
+        Vector3 scanDirection = (EnemyManager.instance.GetPlayerPosition() - transform.position).normalized;
+        hitInfos.Clear();
+        if (Physics.Raycast(transform.position + new Vector3(0, .5f, 0), scanDirection, out RaycastHit hitInfo, scanRange, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Wall")))
+        {
+            hitInfos.Add(hitInfo);
+            if (hitInfo.transform.tag == "Player")
+            {
+                EnemyManager.instance.OnDetectPlayer(controller);
+            }
+            else
+            {
+                EnemyManager.instance.UpdatePlayerDetection(false);
+            }
+        }
+        else
+        {
+            EnemyManager.instance.UpdatePlayerDetection(false);
+        }
     }
 
     private void OnDrawGizmos()
+    {
+        switch (controller.enemyState)
+        {
+            case EnemyState.Patrol:
+                DrawScan();
+                break;
+            case EnemyState.Blinky:
+                DrawVision();
+                break;
+            case EnemyState.Inky:
+                DrawScan();
+                break;
+            case EnemyState.Pinky:
+                DrawScan();
+                break;
+            default:
+                DrawScan();
+                break;
+        }
+    }
+
+    private void DrawScan()
     {
         Gizmos.color = Color.yellow;
         Vector3 scanDirection;
@@ -71,6 +111,20 @@ public class EnemyScaner : MonoBehaviour
             scanDirection = Quaternion.Euler(0, i * scanStep - scanAngle, 0) * transform.forward;
             Gizmos.DrawLine(transform.position + new Vector3(0, .5f, 0), transform.position + scanDirection * scanRange + new Vector3(0, .5f, 0));
         }
+        if (hitInfos != null)
+        {
+            foreach (var hitInfo in hitInfos)
+            {
+                if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+                    Gizmos.color = Color.red;
+                else Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position + new Vector3(0, .5f, 0), hitInfo.point);
+            }
+        }
+    }
+
+    private void DrawVision()
+    {
         if (hitInfos != null)
         {
             foreach (var hitInfo in hitInfos)

@@ -7,7 +7,8 @@ public class EnemyManager : MonoBehaviour
     public Transform player;
     private Vector3 playerPosition;
 
-    private bool playerDetected;
+    public bool playerDetected;
+    public bool playerLost;
     public float playerLostTime = 5f;
     private float playerLostTimer;
 
@@ -19,30 +20,36 @@ public class EnemyManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         playerDetected = false;
+        playerLost = true;
     }
 
     private void Update()
     {
-        if (!playerDetected)
+        if (playerLost)
         {
-            playerLostTimer += Time.deltaTime;
-            if (playerLostTimer >= playerLostTime)
+
+        }
+        else
+        {
+            playerPosition = player.position;
+            if (!playerDetected)
             {
-                playerDetected = false;
-                playerPosition = player.position;
+                playerLostTimer += Time.deltaTime;
+                if (playerLostTimer >= playerLostTime) playerLost = true;
             }
         }
     }
 
     public void OnDetectPlayer(EnemyController enemy)
     {
+        playerLost = false;
+        UpdatePlayerDetection(true);
         switch (enemy.enemyState)
         {
             case EnemyState.Patrol:
                 SetEnemyState(enemy, EnemyState.Blinky);
                 break;
             case EnemyState.Blinky:
-                UpdatePlayerDetection(true);
                 break;
             case EnemyState.Inky:
                 if (GetEnemy(EnemyState.Blinky, out EnemyController enemy1))
@@ -70,6 +77,14 @@ public class EnemyManager : MonoBehaviour
             default:
                 SetEnemyState(enemy, EnemyState.Blinky);
                 break;
+        }
+    }
+
+    public void AlertClear()
+    {
+        foreach (EnemyController enemy in enemies)
+        {
+            SetEnemyState(enemy, EnemyState.Patrol);
         }
     }
 
@@ -106,12 +121,15 @@ public class EnemyManager : MonoBehaviour
         enemy.SetState(state);
     }
 
-    private void UpdatePlayerDetection(bool canSeePlayer)
+    public void UpdatePlayerDetection(bool canSeePlayer)
     {
-        playerDetected = canSeePlayer;
-        if (!playerDetected)
+        if (playerDetected ^ canSeePlayer)
         {
-            playerLostTimer = 0;
+            playerDetected = canSeePlayer;
+            if (!playerDetected)
+            {
+                playerLostTimer = 0;
+            }
         }
     }
 
@@ -119,5 +137,11 @@ public class EnemyManager : MonoBehaviour
     {
         if (playerDetected) return player.position;
         else return playerPosition;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(GetPlayerPosition(), 0.5f);
     }
 }

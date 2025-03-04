@@ -61,7 +61,7 @@ public class EnemyController : MonoBehaviour
 
     public Vector3 PlayerPosition()
     {
-        return EnemyManager.instance.player.position;
+        return EnemyManager.instance.GetPlayerPosition();
     }
 
     public Vector3 PredictPlayerPosition()
@@ -90,7 +90,7 @@ public class EnemyController : MonoBehaviour
                 Gizmos.color = Color.red;
             }
             Gizmos.DrawLine(waypoints[startIndex].position, waypoints[endindex].position);
-            Gizmos.DrawSphere(waypoints[endindex].position, 1);
+            Gizmos.DrawSphere(waypoints[endindex].position, 0.5f);
         }
     }
 }

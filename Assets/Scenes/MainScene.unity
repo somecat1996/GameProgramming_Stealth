@@ -775,7 +775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1699314f6da7b67499877aab81d10c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3.5
+  speed: 5
   obstacleDecelerateRate: 2
 --- !u!136 &318419970
 CapsuleCollider:
@@ -1284,7 +1284,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookAheadDistance: 10
   player: {fileID: 318419967}
-  playerLostTime: 5
+  playerDetected: 0
+  playerLostTime: 2
   enemies: []
 --- !u!1 &673519826
 GameObject:
@@ -3496,28 +3497,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6269459348976659999, guid: 13fe215c268850348a67e7b6ba2068b9, type: 3}
       propertyPath: m_Name
-      value: Enemy
+      value: Enemy Controller
       objectReference: {fileID: 0}
-    - target: {fileID: 7388693667441461016, guid: 13fe215c268850348a67e7b6ba2068b9, type: 3}
-      propertyPath: controller
-      value: 
-      objectReference: {fileID: 4437246904374259622}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13fe215c268850348a67e7b6ba2068b9, type: 3}
---- !u!114 &4437246904374259622 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8466919087559140149, guid: 13fe215c268850348a67e7b6ba2068b9, type: 3}
-  m_PrefabInstance: {fileID: 4437246904374259621}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e18c0069393019347874dc3129da6b86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6881241743328374707 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6363463835895696326, guid: 0f9e3a0d0decf7044b5eced40758a420, type: 3}
