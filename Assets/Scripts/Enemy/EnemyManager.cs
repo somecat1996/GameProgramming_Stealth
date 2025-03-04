@@ -27,11 +27,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        if (playerLost)
-        {
-
-        }
-        else
+        if (!playerLost)
         {
             playerPosition = player.position;
             if (!playerDetected)
