@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     public AgentController enemy;
     public EnemyState enemyState = EnemyState.Patrol;
 
-    private int waypointIndex = 0;
+    private int waypointIndex = -1;
     // Waypoints
     public Transform[] waypoints;
     // Start is called before the first frame update
