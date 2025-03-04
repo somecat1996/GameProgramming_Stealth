@@ -11,7 +11,7 @@ public class AgentController : EntityMovement
     [SerializeField] private float wanderDistance = 7f;
     [SerializeField] private float wanderRadius = 2f;
 
-    private readonly int jogParam = Animator.StringToHash("Jog");
+    //private readonly int jogParam = Animator.StringToHash("Jog");
 
     private void Start()
     {
@@ -81,5 +81,14 @@ public class AgentController : EntityMovement
     {
         base.ExitObstacle();
         navAgent.speed = GetSpeed();
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (navAgent.hasPath)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawCube(navAgent.destination + new Vector3(0, 1, 0), 0.1f * Vector3.one);
+        }
     }
 }
