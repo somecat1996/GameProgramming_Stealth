@@ -1,6 +1,9 @@
 using UnityEngine;
 using Unity.AI.Navigation;
 
+/// <summary>
+/// Update NavMesh at runtime
+/// </summary>
 public class UpdateNavMesh : MonoBehaviour
 {
     public static UpdateNavMesh instance;
@@ -16,6 +19,9 @@ public class UpdateNavMesh : MonoBehaviour
         navMeshSurface = FindObjectOfType<NavMeshSurface>();
     }
 
+    /// <summary>
+    /// Update NavMesh
+    /// </summary>
     public void UpdateNavMeshSurface()
     {
         navMeshSurface.BuildNavMesh();

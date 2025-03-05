@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Enemy scane for player
+/// </summary>
 public class EnemyScaner : MonoBehaviour
 {
     [SerializeField] private EnemyController controller;
@@ -40,6 +43,9 @@ public class EnemyScaner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enemy use multiple RayCast to scan for player
+    /// </summary>
     private void ScanForPlayer()
     {
         Vector3 scanDirection;
@@ -61,6 +67,9 @@ public class EnemyScaner : MonoBehaviour
         controller.canSeePlayer = seePlayer;
     }
 
+    /// <summary>
+    /// Enemy uses one RayCast to check if it can see the player
+    /// </summary>
     private void LookAtPlayer()
     {
         Vector3 scanDirection = (EnemyManager.instance.GetPlayerPosition() - transform.position).normalized;
@@ -108,6 +117,9 @@ public class EnemyScaner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Draw scan RayCast and result
+    /// </summary>
     private void DrawScan()
     {
         Gizmos.color = Color.yellow;
@@ -129,6 +141,9 @@ public class EnemyScaner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Draw vision result
+    /// </summary>
     private void DrawVision()
     {
         if (hitInfos != null)

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Base class for moving enetities
+/// </summary>
 public class EntityMovement : MonoBehaviour
 {
     public float speed = 2f;
@@ -11,6 +14,10 @@ public class EntityMovement : MonoBehaviour
         onObstacle = false;
     }
 
+    /// <summary>
+    /// Get current speed
+    /// </summary>
+    /// <returns>Curret speed</returns>
     public float GetSpeed()
     {
         if (onObstacle) return speed / obstacleDecelerateRate;
@@ -27,11 +34,17 @@ public class EntityMovement : MonoBehaviour
         if (other.tag == "Obstacle") ExitObstacle();
     }
 
+    /// <summary>
+    /// Call on entering obstacle
+    /// </summary>
     protected virtual void EnterObstacle()
     {
         onObstacle = true;
     }
 
+    /// <summary>
+    /// Call on exiting obstacle
+    /// </summary>
     protected virtual void ExitObstacle()
     {
         onObstacle = false;

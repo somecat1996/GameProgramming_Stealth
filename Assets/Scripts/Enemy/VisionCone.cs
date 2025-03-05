@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Show enemy's vision cone
+/// </summary>
 public class VisionCone : MonoBehaviour
 {
     public Material VisionConeMaterial;

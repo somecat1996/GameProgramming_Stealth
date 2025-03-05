@@ -1,12 +1,19 @@
 using UnityEngine;
 
+/// <summary>
+/// Player control and move
+/// </summary>
 public class PlayerMovement : EntityMovement
 {
     private Rigidbody rb;
+    // Player start positon
+    private Vector3 originPosition;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        originPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -21,5 +28,16 @@ public class PlayerMovement : EntityMovement
 
         if (direction.magnitude > 0)
             transform.rotation = Quaternion.LookRotation(new Vector3(-horizontal, 0, -vertical));
+    }
+
+    // When collide with an enemy, reset the game
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            transform.position = originPosition;
+            EnemyManager.instance.AlertClear();
+            Wallet.instance.ResetGold();
+        }
     }
 }

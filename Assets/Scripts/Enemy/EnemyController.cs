@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Enemy behavior state
+/// </summary>
 public enum EnemyState
 {
     Patrol,
@@ -8,6 +11,9 @@ public enum EnemyState
     Pinky
 }
 
+/// <summary>
+/// Enemy control and movement
+/// </summary>
 public class EnemyController : MonoBehaviour
 {
     public AgentController enemy;
@@ -45,11 +51,19 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set enemy state
+    /// </summary>
+    /// <param name="state">Target state</param>
     public void SetState(EnemyState state)
     {
         enemyState = state;
     }
 
+    /// <summary>
+    /// Find a new target position for nav agent
+    /// </summary>
+    /// <returns>Target position</returns>
     public Vector3 GetNewTarget()
     {
         switch (enemyState)
@@ -67,6 +81,10 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get next waypoint position
+    /// </summary>
+    /// <returns>Waypoint position</returns>
     public Vector3 NewWaypoint()
     {
         waypointIndex++;
@@ -76,19 +94,40 @@ public class EnemyController : MonoBehaviour
         return waypoints[waypointIndex].position;
     }
 
+    /// <summary>
+    /// Get player position
+    /// </summary>
+    /// <returns>Player position</returns>
     public Vector3 PlayerPosition()
     {
         return EnemyManager.instance.GetPlayerPosition();
     }
 
+    /// <summary>
+    /// Get position ahead of player's moving direction
+    /// </summary>
+    /// <returns>Predict position</returns>
     public Vector3 PredictPlayerPosition()
     {
         return EnemyManager.instance.player.position + EnemyManager.instance.player.right * EnemyManager.instance.lookAheadDistance;
     }
 
+    /// <summary>
+    /// Get a position that can encicle the player
+    /// </summary>
+    /// <returns>Encicle position</returns>
     public Vector3 Encircle()
     {
-        return Vector3.zero;
+        if (EnemyManager.instance.GetEnemy(EnemyState.Blinky, out EnemyController blinkyEnemy) && EnemyManager.instance.GetEnemy(EnemyState.Pinky, out EnemyController pinkyEnemy))
+        {
+            Vector3 midPoint = (blinkyEnemy.transform.position + pinkyEnemy.transform.position) / 2f;
+            Vector3 playerPosition = EnemyManager.instance.GetPlayerPosition();
+            Vector3 direction = (EnemyManager.instance.GetPlayerPosition() - midPoint).normalized;
+
+            return playerPosition + direction * EnemyManager.instance.lookAheadDistance;
+        }
+        enemyState = EnemyState.Patrol;
+        return NewWaypoint();
     }
 
     private void OnDrawGizmos()

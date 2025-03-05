@@ -1,12 +1,18 @@
 using UnityEngine;
 
+/// <summary>
+/// Manager of enemies
+/// </summary>
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
+    // Look ahead distance for pinky and inky
     public float lookAheadDistance = 10f;
+    // Player position
     public Transform player;
     private Vector3 playerPosition;
 
+    // Player sight info
     public bool playerDetected;
     public bool playerLost;
     public float playerLostTime = 5f;
@@ -14,8 +20,10 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private EnemyController[] enemies;
 
+    // Distance for enemy to be activated by another enemy
     public float enemyActivateRange = 10f;
 
+    // Enemy state color
     public Material enemyNormal;
     public Material enemyBlinky;
     public Material enemyPinky;
@@ -43,6 +51,10 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called when an enemy detects the player
+    /// </summary>
+    /// <param name="enemy">The enemy that detects the player</param>
     public void OnDetectPlayer(EnemyController enemy)
     {
         playerLost = false;
@@ -65,17 +77,23 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Put a patrol enemy to blinky state
+    /// </summary>
+    /// <param name="enemy">Target enemy</param>
     private void TryEnterBlinkStateFromPatrol(EnemyController enemy)
     {
         Debug.Log($"{enemy.gameObject.name} try enter blinky state from patrol state");
         if (GetEnemy(EnemyState.Blinky, out EnemyController enemy1))
         {
+            // If existing blinky state enemy can see the player, this enemy enter an avaliable state
             if (enemy1.canSeePlayer)
             {
                 if (GetEnemy(EnemyState.Pinky, out _)) SetEnemyState(enemy1, EnemyState.Pinky);
                 else SetEnemyState(enemy1, EnemyState.Inky);
                 return;
             }
+            // If existing blinky enemy can't see the player, the enemy closer to the player enter blinky state, the other one enters an avaliable state
             float distance1 = (player.position - enemy.transform.position).magnitude;
             float distance2 = (player.position - enemy1.transform.position).magnitude;
             if (distance1 < distance2)
@@ -90,15 +108,22 @@ public class EnemyManager : MonoBehaviour
                 else SetEnemyState(enemy, EnemyState.Inky);
             }
         }
+        // If there is no existing blinky state enemy, this enemy enter blinky state
         else SetEnemyState(enemy, EnemyState.Blinky);
     }
 
+    /// <summary>
+    /// Put a pinky enemy to blinky state
+    /// </summary>
+    /// <param name="enemy">Target enemy</param>
     private void TryEnterBlinkStateFromPinky(EnemyController enemy)
     {
         if (GetEnemy(EnemyState.Blinky, out EnemyController enemy1))
         {
+            // If existing blinky state enemy can see the player, this enemy enter an avaliable state
             if (enemy1.canSeePlayer)
                 return;
+            // If existing blinky enemy can't see the player, the enemy closer to the player enter blinky state, the other one enters pinky state
             float distance1 = (player.position - enemy.transform.position).magnitude;
             float distance2 = (player.position - enemy1.transform.position).magnitude;
             if (distance1 < distance2)
@@ -107,15 +132,23 @@ public class EnemyManager : MonoBehaviour
                 SetEnemyState(enemy1, EnemyState.Pinky);
             }
         }
+        // If there is no existing blinky state enemy, this enemy enter blinky state
         else SetEnemyState(enemy, EnemyState.Blinky);
     }
 
+
+    /// <summary>
+    /// Put a pinky enemy to inky state
+    /// </summary>
+    /// <param name="enemy">Target enemy</param>
     private void TryEnterBlinkStateFromInky(EnemyController enemy)
     {
         if (GetEnemy(EnemyState.Blinky, out EnemyController enemy1))
         {
+            // If existing blinky state enemy can see the player, this enemy enter an avaliable state
             if (enemy1.canSeePlayer)
                 return;
+            // If existing blinky enemy can't see the player, the enemy closer to the player enter blinky state, the other one enters inky state
             float distance1 = (player.position - enemy.transform.position).magnitude;
             float distance2 = (player.position - enemy1.transform.position).magnitude;
             if (distance1 < distance2)
@@ -124,9 +157,13 @@ public class EnemyManager : MonoBehaviour
                 SetEnemyState(enemy1, EnemyState.Inky);
             }
         }
+        // If there is no existing blinky state enemy, this enemy enter blinky state
         else SetEnemyState(enemy, EnemyState.Blinky);
     }
 
+    /// <summary>
+    /// Put all enemies to patrol state
+    /// </summary>
     public void AlertClear()
     {
         foreach (EnemyController enemy in enemies)
@@ -135,17 +172,25 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Check enemies around one enemy and activate them
+    /// </summary>
+    /// <param name="enemy">Source enemy</param>
     public void ActivateOtherEnemy(EnemyController enemy)
     {
         foreach (EnemyController enemy1 in enemies)
         {
-            if (enemy != enemy1 && Vector3.Distance(enemy.enemy.transform.position, enemy1.enemy.transform.position) <= enemyActivateRange)
+            if (enemy != enemy1 && enemy1.enemyState == EnemyState.Patrol && Vector3.Distance(enemy.enemy.transform.position, enemy1.enemy.transform.position) <= enemyActivateRange)
             {
                 OnActivate(enemy1);
             }
         }
     }
 
+    /// <summary>
+    /// Active one enemy and put it to valid state
+    /// </summary>
+    /// <param name="enemy">Target enemy</param>
     public void OnActivate(EnemyController enemy)
     {
         if (!GetEnemy(EnemyState.Pinky, out _))
@@ -158,7 +203,13 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    private bool GetEnemy(EnemyState state, out EnemyController returnEnemy)
+    /// <summary>
+    /// Get one enemy of sertain state
+    /// </summary>
+    /// <param name="state">Search state</param>
+    /// <param name="returnEnemy">Found enemy</param>
+    /// <returns>Whether find this enemy</returns>
+    public bool GetEnemy(EnemyState state, out EnemyController returnEnemy)
     {
         returnEnemy = null;
         bool returnBool = false;
@@ -173,6 +224,11 @@ public class EnemyManager : MonoBehaviour
         return returnBool;
     }
 
+    /// <summary>
+    /// Set one enemy to a state
+    /// </summary>
+    /// <param name="enemy">Target enemy</param>
+    /// <param name="state">Target state</param>
     private void SetEnemyState(EnemyController enemy, EnemyState state)
     {
         enemy.SetState(state);
@@ -196,6 +252,10 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update player visible state. If player isn't visible by enemies, start timer
+    /// </summary>
+    /// <param name="canSeePlayer"></param>
     public void UpdatePlayerDetection(bool canSeePlayer)
     {
         if (playerDetected ^ canSeePlayer)
@@ -208,6 +268,10 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get player position
+    /// </summary>
+    /// <returns>Player position</returns>
     public Vector3 GetPlayerPosition()
     {
         if (playerDetected) return player.position;
