@@ -43,6 +43,7 @@ public class EnemyScaner : MonoBehaviour
     private void ScanForPlayer()
     {
         Vector3 scanDirection;
+        bool seePlayer = false;
         hitInfos.Clear();
         for (int i = 0; i < scanStepNum; i++)
         {
@@ -53,9 +54,11 @@ public class EnemyScaner : MonoBehaviour
                 if (hitInfo.transform.tag == "Player")
                 {
                     EnemyManager.instance.OnDetectPlayer(controller);
+                    seePlayer = true;
                 }
             }
         }
+        controller.canSeePlayer = seePlayer;
     }
 
     private void LookAtPlayer()
@@ -67,16 +70,19 @@ public class EnemyScaner : MonoBehaviour
             hitInfos.Add(hitInfo);
             if (hitInfo.transform.tag == "Player")
             {
-                EnemyManager.instance.OnDetectPlayer(controller);
+                EnemyManager.instance.UpdatePlayerDetection(true);
+                controller.canSeePlayer = true;
             }
             else
             {
                 EnemyManager.instance.UpdatePlayerDetection(false);
+                controller.canSeePlayer = false;
             }
         }
         else
         {
             EnemyManager.instance.UpdatePlayerDetection(false);
+            controller.canSeePlayer = false;
         }
     }
 

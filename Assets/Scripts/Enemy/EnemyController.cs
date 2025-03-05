@@ -16,10 +16,14 @@ public class EnemyController : MonoBehaviour
     private int waypointIndex = -1;
     // Waypoints
     public Transform[] waypoints;
+
+    public MeshRenderer enemyBody;
+    public bool canSeePlayer;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        canSeePlayer = false;
     }
 
     // Update is called once per frame

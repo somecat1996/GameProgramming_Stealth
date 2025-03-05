@@ -88,7 +88,7 @@ public class AgentController : EntityMovement
         if (navAgent.hasPath)
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawCube(navAgent.destination + new Vector3(0, 1, 0), 0.1f * Vector3.one);
+            Gizmos.DrawCube(navAgent.destination + new Vector3(0, 1, 0), Vector3.one);
         }
     }
 }
